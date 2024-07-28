@@ -101,4 +101,37 @@
     font-weight: 600;
 }
 
+.edit-button {
+    background-color: #F4A62A;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    margin: 2px;
+}
+
+.edit-button:hover {
+    background-color: #e68900;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.delete-button {
+    background-color: #e91d0e;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    margin: 2px;
+}
+
+.delete-button:hover {
+    background-color: #f31206;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
 

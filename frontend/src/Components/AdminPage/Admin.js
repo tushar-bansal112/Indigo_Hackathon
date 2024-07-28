@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Admin.css";
+import axios from "../../axios.js";
 
 const Admin = () => {
   const [flights, setFlights] = useState([]);
@@ -14,9 +15,64 @@ const Admin = () => {
     actual_departure: "",
     actual_arrival: "",
   });
-  const [editId, setEditId] = useState(false);
+  const [flightId, setFlightId] = useState(null);
 
-  const handleSubmit = () => {};
+  useEffect(() => {
+    fetchFlights();
+  }, []);
+
+  const fetchFlights = async () => {
+    try {
+      const response = await axios.get("/flights");
+      console.log(response.data);
+      const data = await response.data;
+      setFlights(data);
+    } catch (error) {
+      console.error("Error fetching flights:", error);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      var response;
+      console.log(JSON.stringify(data));
+      if (flightId === null) {
+        response = await axios.post("/flights", {
+          body: data,
+        });
+      } else {
+        response = await axios.put(`flights/${flightId}`, {
+          body: data,
+        });
+      }
+
+      if (response.status === 201 || response.status === 200) {
+        alert(
+          flightId ? "Flight updated successfully" : "Flight added successfully"
+        );
+        fetchFlights();
+        setData({
+          flight_id: "",
+          airline: "",
+          status: "",
+          departure_gate: "",
+          arrival_gate: "",
+          scheduled_departure: "",
+          scheduled_arrival: "",
+          actual_departure: "",
+          actual_arrival: "",
+        });
+        setFlightId(null);
+      } else {
+        alert("Error saving flight data");
+      }
+    } catch (error) {
+      console.error("Error saving flight data:", error);
+      alert("Error saving flight data");
+    }
+  };
 
   const handleInputChange = (e) => {
     setData({
@@ -25,14 +81,44 @@ const Admin = () => {
     });
   };
 
-  const handleEdit = () => {};
+  const handleEdit = (flight) => {
+    setData({
+      flight_id: flight.flight_id,
+      airline: flight.airline,
+      status: flight.status,
+      departure_gate: flight.departure_gate,
+      arrival_gate: flight.arrival_gate,
+      scheduled_departure: flight.scheduled_departure,
+      scheduled_arrival: flight.scheduled_arrival,
+      actual_departure: flight.actual_departure,
+      actual_arrival: flight.actual_arrival,
+    });
+    setFlightId(flight._id);
+  };
 
-  const handleDelete = () => {};
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this flight?")) {
+      return;
+    }
+    try {
+      const response = await axios.delete(`/flights/${id}`);
+      if (response.status == 200) {
+        alert("Flight deleted successfully");
+        fetchFlights();
+      } else {
+        alert("Error deleting flight");
+      }
+    } catch (error) {
+      alert("Error deleting flight.");
+    }
+  };
 
   return (
     <div className="container">
       <div className="form-container">
-        <h1 className="form-title">{editId ? "EDIT FLIGHT" : "ADD FLIGHT"}</h1>
+        <h1 className="form-title">
+          {flightId ? "EDIT FLIGHT" : "ADD FLIGHT"}
+        </h1>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="flight_id" className="label">
@@ -159,7 +245,7 @@ const Admin = () => {
             />
           </div>
           <button type="submit" className="button">
-            {editId ? "Update Flight" : "Add Flight"}
+            {flightId ? "Update Flight" : "Add Flight"}
           </button>
         </form>
       </div>
