@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./Admin.css";
 import axios from "../../axios.js";
+import { useNavigate } from "react-router-dom";
+const Admin = ({ token }) => {
+  let navigate = useNavigate();
 
-const Admin = () => {
   const [flights, setFlights] = useState([]);
   const [data, setData] = useState({
     flight_id: "",
@@ -18,6 +20,9 @@ const Admin = () => {
   const [flightId, setFlightId] = useState(null);
 
   useEffect(() => {
+    if (!token) {
+      navigate("/");
+    }
     fetchFlights();
   }, []);
 

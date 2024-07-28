@@ -1,10 +1,13 @@
 const express = require("express");
 const route = require("./routes/route");
-const app = express();
-const PORT = 8080;
+const { config } = require("dotenv");
+config();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const db = require("./database/db");
+
+const app = express();
+const PORT = 8080;
 
 app.use(bodyParser.json());
 app.use(cors({ origin: true }));
